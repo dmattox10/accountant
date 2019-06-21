@@ -1,0 +1,7 @@
+{
+  "appId": "com.mattox.accountant",
+  "appName": "accountant",
+  "bundledWebRuntime": false,
+  "npmClient": "yarn",
+  "webDir": "build"
+}

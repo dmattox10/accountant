@@ -1,25 +1,31 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Fragment } from "react";
+import ReactDOM from "react-dom";
+import { Switch, Route, Link, BrowserRouter, Redirect } from "react-router-dom";
+
+import Colyseus from 'colyseus.js'
+
+import Create from './components/Create'
+import Join from './components/Join'
+import All from './components/All'
+import Game from './components/Game'
+import Rejoin from './components/Rejoin'
+
+/*
+Get list of rooms, map, display list using list component. 
+Click room to join, click add to create, and join, a room.
+*/
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <div className="App">
+        <Route exact path="/" component={ All } />
+        <Route exact path="/create" component={ Create } />
+        <Route exact path="/join" component={ Join } />
+        <Route exact path="/rejoin" component={ Rejoin } />
+        <Route path="/game/:id" component={ Game } />
+      </div>
+    </BrowserRouter>
   );
 }
 
