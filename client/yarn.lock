@@ -944,11 +944,6 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
-"@colyseus/schema@^0.4.0":
-  version "0.4.36"
-  resolved "https://registry.yarnpkg.com/@colyseus/schema/-/schema-0.4.36.tgz#1e4ede006a8124afd923e10892296e424d3beca5"
-  integrity sha512-rkVWuPancarK/4jD8aiwRr/XRmaCa5l4oE8s+9OXi6XyL4QIHy/S3wqdHZRU9VaQ/ePCECrTTjwqxnEsZ/LR2w==
-
 "@csstools/convert-colors@^1.4.0":
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/@csstools/convert-colors/-/convert-colors-1.4.0.tgz#ad495dc41b12e75d588c6db8b9834f08fa131eb7"
@@ -958,21 +953,6 @@
   version "9.0.1"
   resolved "https://registry.yarnpkg.com/@csstools/normalize.css/-/normalize.css-9.0.1.tgz#c27b391d8457d1e893f1eddeaf5e5412d12ffbb5"
   integrity sha512-6It2EVfGskxZCQhuykrfnALg7oVeiI6KclWSmGDqB0AiInVrTGB9Jp9i4/Ad21u9Jde/voVQz6eFX/eSg/UsPA==
-
-"@gamestdio/signals@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@gamestdio/signals/-/signals-1.0.0.tgz#3f7501a322b9b7c5d7f105f81d0f638d4e0357a4"
-  integrity sha512-EPWA3IkJ+xDT1K/xV53m5N4h/g4qzpf4NG6GustZLT1wp3T59YPonGQ9LLl3+YMNwSNj0yawX4wUpOnuQJ96Ug==
-
-"@gamestdio/state-listener@^3.1.0":
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/@gamestdio/state-listener/-/state-listener-3.1.0.tgz#d39fc5f107e58b536ac6e8477ed141ed7421788a"
-  integrity sha512-FEKarKXEeXvCrzilFw9ANOxKkdtFfHXYqJNCaYEhTV+13x02o7HXDFetJAoQCAT9AVgiHUd3Ylo5mOukAegPoA==
-
-"@gamestdio/websocket@^0.3.2":
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/@gamestdio/websocket/-/websocket-0.3.2.tgz#321ba0976ee30fd14e51dbf8faa85ce7b325f76a"
-  integrity sha512-J3n5SKim+ZoLbe44hRGI/VYAwSMCeIJuBy+FfP6EZaujEpNchPRFcIsVQLWAwpU1bP2Ji63rC+rEUOd1vjUB6Q==
 
 "@hapi/address@2.x.x":
   version "2.0.0"
@@ -2631,19 +2611,6 @@ color@^3.0.0:
     color-convert "^1.9.1"
     color-string "^1.5.2"
 
-colyseus.js@^0.10.8:
-  version "0.10.8"
-  resolved "https://registry.yarnpkg.com/colyseus.js/-/colyseus.js-0.10.8.tgz#b86252aea53df4a164228d3cf9cab8d6ce90fbe4"
-  integrity sha512-VUKeJEpfI/1UVmXiMmmoRky/e1ryHQ7rV7B0Cm9j49WCmvHMuwj2yhk8qTgOSsd0wCE7fTj/DlmYiPczVcvSIg==
-  dependencies:
-    "@colyseus/schema" "^0.4.0"
-    "@gamestdio/signals" "^1.0.0"
-    "@gamestdio/state-listener" "^3.1.0"
-    "@gamestdio/websocket" "^0.3.2"
-    fossil-delta "^1.0.0"
-    httpie "^2.0.0-next.2"
-    notepack.io "^2.1.3"
-
 combined-stream@^1.0.6, combined-stream@~1.0.6:
   version "1.0.7"
   resolved "https://registry.yarnpkg.com/combined-stream/-/combined-stream-1.0.7.tgz#2d1d24317afb8abe95d6d2c0b07b57813539d828"
@@ -4240,11 +4207,6 @@ forwarded@~0.1.2:
   resolved "https://registry.yarnpkg.com/forwarded/-/forwarded-0.1.2.tgz#98c23dab1175657b8c0573e8ceccd91b0ff18c84"
   integrity sha1-mMI9qxF1ZXuMBXPozszZGw/xjIQ=
 
-fossil-delta@^1.0.0:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/fossil-delta/-/fossil-delta-1.0.2.tgz#a3e9545d5fd5e1b317dca38f0c852baa80b13b89"
-  integrity sha512-fkgQUnBaJjhDq0DN1ajBlWWRH99NQgwVoReMEr0oXLqYXAx8X9mD5gGaoTYDdVVbLJYsMNrnkJ028Ld0UgWrGA==
-
 fragment-cache@^0.2.1:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/fragment-cache/-/fragment-cache-0.2.1.tgz#4290fad27f13e89be7f33799c6bc5a0abfff0d19"
@@ -4803,11 +4765,6 @@ http-signature@~1.2.0:
     assert-plus "^1.0.0"
     jsprim "^1.2.2"
     sshpk "^1.7.0"
-
-httpie@^2.0.0-next.2:
-  version "2.0.0-next.2"
-  resolved "https://registry.yarnpkg.com/httpie/-/httpie-2.0.0-next.2.tgz#c858f135b09265b2adb7d318198f1822d87253aa"
-  integrity sha512-QcYtyrn69p9VDy9SCNCDWAKmSz+wCHII4dc3fnHKA05ePiTeeltLvnnq+FyQPnsOrtpmLPd805FbmcXhtMljtA==
 
 https-browserify@^1.0.0:
   version "1.0.0"
@@ -6692,11 +6649,6 @@ normalize-url@^3.0.0:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/normalize-url/-/normalize-url-3.3.0.tgz#b2e1c4dc4f7c6d57743df733a4f5978d18650559"
   integrity sha512-U+JJi7duF1o+u2pynbp2zXDW2/PADgC30f0GsHZtRh+HOcXHnw137TrNlyxxRvWW5fjKd3bcLHPxofWuCjaeZg==
-
-notepack.io@^2.1.3:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/notepack.io/-/notepack.io-2.2.0.tgz#d7ea71d1cb90094f88c6f3c8d84277c2d0cd101c"
-  integrity sha512-9b5w3t5VSH6ZPosoYnyDONnUTF8o0UkBw7JLA6eBlYJWyGT1Q3vQa8Hmuj1/X6RYvHjjygBDgw6fJhe0JEojfw==
 
 npm-bundled@^1.0.1:
   version "1.0.6"

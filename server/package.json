@@ -15,9 +15,9 @@
     "@babel/node": "^7.4.5",
     "@babel/plugin-proposal-class-properties": "^7.4.4",
     "@babel/preset-env": "^7.4.5",
-    "colyseus": "^0.10.7",
     "express": "^4.17.1",
     "nodemon": "^1.19.1",
-    "serve-index": "^1.9.1"
+    "serve-index": "^1.9.1",
+    "socket.io": "^2.2.0"
   }
 }

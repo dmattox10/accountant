@@ -1,32 +1,46 @@
-import path from 'path'
-import express from 'express'
-import serveIndex from 'serve-index'
-import { createServer } from 'http'
-import { Server } from 'colyseus'
-import { monitor } from 'colyseus'
-
-// import handlers
-
-import { StateHandler } from './actions/statehandler'
-import { CreateJoin } from './actions/createjoin'
-
-const port = process.env.port || 2567
-const app = express()
-
-const gameServer = new Server({
-    server: createServer(app)
-})
-
-gameServer.register('state_handler', StateHandler)
-gameServer.register('create_join', CreateJoin)
-
-app.use('/', express.static(path.join(__dirname, "static")))
-app.use('/', serveIndex(path.join(__dirname, "static"), {'icons': true}))
-
-gameServer.onShutdown(function(){
-  console.log(`game server is going down.`)
-});
-
-gameServer.listen(port)
-
-console.log(`Listening on http://localhost:${ port }`)
+'use strict';
+ 
+const express = require("express");
+const http = require('http');
+const socketio = require('socket.io');
+ 
+const socketEvents = require('./web/socket'); 
+const routes = require('./web/routes'); 
+const appConfig = require('./config/app-config'); 
+ 
+ 
+class Server{
+ 
+    constructor(){
+        this.app = express();
+        this.http = http.Server(this.app);
+        this.socket = socketio(this.http);
+    }
+ 
+    appConfig(){        
+        new appConfig(this.app).includeConfig();
+    }
+ 
+    /* Including app Routes starts*/
+    includeRoutes(){
+        new routes(this.app).routesConfig();
+        new socketEvents(this.socket).socketConfig();
+    }
+    /* Including app Routes ends*/  
+ 
+    appExecute(){
+        this.appConfig();
+        this.includeRoutes();
+ 
+        const port =  process.env.PORT || 4000;
+        const host = process.env.HOST || `localhost`;      
+ 
+        this.http.listen(port, host, () => {
+            console.log(`Listening on http://${host}:${port}`);
+        });
+    }
+ 
+}
+    
+const app = new Server();
+app.appExecute();

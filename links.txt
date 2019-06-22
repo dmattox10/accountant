@@ -1,3 +1,9 @@
-https://github.com/endel/tic-tac-toe/
-https://github.com/endel/colyseus-react-example/
-https://docs.colyseus.io/client/client/
+https://www.codershood.info/2019/03/31/real-time-private-chatting-app-using-react-nodejs-mongodb-and-socket-io-part-1/
+
+https://medium.com/javascript-in-plain-english/simple-real-time-web-socket-app-using-node-express-socket-io-react-da73a2685b6a
+
+https://dev.to/rexeze/how-to-build-a-real-time-chat-app-with-nodejs-socketio-and-mongodb-2kho
+
+https://itnext.io/building-a-node-js-websocket-chat-app-with-socket-io-and-react-473a0686d1e1
+
+https://github.com/justadudewhohacks/websocket-chat
