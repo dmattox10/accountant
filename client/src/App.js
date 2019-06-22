@@ -23,7 +23,7 @@ function App() {
         <Route exact path="/create" component={ Create } />
         <Route exact path="/join" component={ Join } />
         <Route exact path="/rejoin" component={ Rejoin } />
-        <Route path="/game/:id" component={ Game } />
+        <Route exact path="/game" component={ Game } />
       </div>
     </BrowserRouter>
   );
