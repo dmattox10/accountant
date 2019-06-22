@@ -47,7 +47,7 @@ class Create extends Component {
         e.preventDefault();
         let options = {
             room: this.state.room,
-            name: this.state.name,
+            name: this.state.name.replace(' ', ''),
             bank: this.state.bank,
             infinite: this.state.infinite,
         }
