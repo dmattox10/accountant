@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-
-import Colyseus from 'colyseus.js'
+import { withRouter } from "react-router";
+//import Colyseus from 'colyseus.js'
 
 class Create extends Component {
 
@@ -18,19 +18,22 @@ class Create extends Component {
         //this.chatRoom.on('update', this.onUpdateRemote.bind(this))
     
         this.state = {
-            options: {
-                room: '',
-                name: '',
-                bank: '0',
-                infinite: true,
-                requests: false,
-                logs: false,
-            }
-
+            
+            room: '',
+            name: '',
+            bank: '2500',
+            infinite: true,
         }
 
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleInputChange = this.handleInputChange.bind(this)
+        this.handleClick = this.handleClick.bind(this)
+    }
+
+    handleClick() {
+        this.setState({
+            infinite: !this.state.infinite
+        })
     }
 
     handleInputChange(e) {
@@ -42,8 +45,13 @@ class Create extends Component {
 
     handleSubmit(e) {
         e.preventDefault();
-        
-        this.props.history.push("/game", {...this.state.options});
+        let options = {
+            room: this.state.room,
+            name: this.state.name,
+            bank: this.state.bank,
+            infinite: this.state.infinite,
+        }
+        this.props.history.push("/game", {...options});
     }
 
     makeid(length) {
@@ -66,13 +74,55 @@ class Create extends Component {
     }
 
     render() {
-        const { options } = this.state
+        const { room } = this.state
         return (
-            <div>
-                <h1>{ options.room }</h1>
+            <div className="container-fluid">
+                <span className="align-middle">
+                    <div className="bg bg-secondary">
+                        <div className="container">
+                            <div className="card text-white bg-info mb-3">
+                                <div className="card-header">Create Game</div>
+                                <div className="card-body">
+                                    <h5 className="card-title">Game Code: { room }</h5>
+                                    <form className="form-inline" onSubmit={ this.handleSubmit }>
+                                        <input className="form-control"
+                                            placeholder="Your Name/Alias"
+                                            name="name"
+                                            id="name"
+                                            onChange={ this.handleInputChange }
+                                            value={ this.state.name }
+                                        /><br />
+                                        <label>Starting Bank/Pot Amount</label>
+                                        <input className="form-control"
+                                            placeholder="2500"
+                                            name="bank"
+                                            id="bank"
+                                            onChange={ this.handleInputChange }
+                                            value={ this.state.bank }
+                                        /><br />
+                                        <div className="form-check active">
+                                            <input className="form-check-input"
+                                            type="checkbox"
+                                            checked="checked"
+                                            onChange={ this.handleClick }
+                                            value=""
+                                            name="infinite"
+                                            id="infinite"
+                                        />
+                                        <label className="form-check-label" for="infinite">
+                                            Infinite Money in the Bank?
+                                        </label><br /><br />
+                                        <button type="submit" className="btn btn-primary">Enter Game</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </span>
             </div>
         )
     }
 }
 
-export default Create
+export default withRouter(Create)

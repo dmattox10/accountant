@@ -7,6 +7,8 @@
     "@capacitor/cli": "^1.0.0",
     "@capacitor/core": "^1.0.0",
     "@capacitor/ios": "^1.0.0",
+    "bootstrap": "^4.3.1",
+    "bootstrap-css-only": "^4.3.1",
     "colyseus.js": "^0.10.8",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
