@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { withRouter } from "react-router";
-//import Colyseus from 'colyseus.js'
+import socketIOClient from "socket.io-client"
+
+const socket = socketIOClient('10.0.0.158:4001')
 
 class Create extends Component {
 
@@ -23,11 +25,41 @@ class Create extends Component {
             name: '',
             bank: '2500',
             infinite: true,
+            error: ''
         }
+
+        socket.on('success', (message) => {
+            console.log(message)
+            this.joinGame()
+        })
+
+        socket.on('failure', (message) => {
+            this.errorMessage(message)
+        })
 
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleInputChange = this.handleInputChange.bind(this)
         this.handleClick = this.handleClick.bind(this)
+    }
+
+    errorMessage = (message) => {
+        this.setState({
+            error: message
+        })
+    }
+
+    joinGame = () => {
+        let options = {
+            room: this.state.room,
+            name: this.state.name.replace(' ', ''),
+            bank: this.state.bank,
+            infinite: this.state.infinite,
+        }
+        this.props.history.push("/game", {...options});
+    }
+
+    send = (command, payload) => {
+        socket.emit(command, payload) // change 'red' to this.state.color
     }
 
     handleClick() {
@@ -51,7 +83,8 @@ class Create extends Component {
             bank: this.state.bank,
             infinite: this.state.infinite,
         }
-        this.props.history.push("/game", {...options});
+        this.send('create', options)
+        //this.props.history.push("/game", {...options});
     }
 
     makeid(length) {
@@ -67,21 +100,20 @@ class Create extends Component {
     componentWillMount() {
         // Set the room name here, to display on screen
         let id = this.makeid(6)
-        console.log(id)
         this.setState({
             room: id
         })
     }
 
     render() {
-        const { room } = this.state
+        const { room, error } = this.state
         return (
             <div className="container-fluid">
                 <span className="align-middle">
                     <div className="bg bg-secondary">
                         <div className="container">
                             <div className="card text-white bg-info mb-3">
-                                <div className="card-header">Create Game</div>
+                                <div className="card-header card-title">Create Game</div>
                                 <div className="card-body">
                                     <h5 className="card-title">Game Code: { room }</h5>
                                     <form className="form-inline" onSubmit={ this.handleSubmit }>
@@ -113,6 +145,7 @@ class Create extends Component {
                                             Infinite Money in the Bank?
                                         </label><br /><br />
                                         <button type="submit" className="btn btn-primary">Enter Game</button>
+                                        <div className="error"><h3>{ error }</h3></div>
                                         </div>
                                     </form>
                                 </div>

@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 
-import Colyseus from 'colyseus.js'
 
 class Join extends Component {
     render() {

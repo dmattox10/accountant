@@ -27,3 +27,7 @@ code {
   margin: auto;  
   padding: 60px 0;
 }
+
+.error {
+  color: #ff0000;
+}

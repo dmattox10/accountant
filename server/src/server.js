@@ -1,6 +1,6 @@
 import express from 'express'
 const app = express()
-const port = 3000
+const port = 4001
 const http = require('http').createServer()
 const io = require('socket.io')(http)
 
@@ -8,14 +8,15 @@ let games = []
 
 io.on('connection', (socket) => {
 
-  socket.on('create', (room) => {
+  socket.on('create', (options) => {
     let game = {
-      name: room,
+      name: options.room,
       players: [],
-      bank: ''
+      bank: options.bank
     }
-    console.log('Room ' + room + ' created')
-    return socket.emit('success', 'created room ' + room)
+    console.log('Room ' + options.room + ' created')
+    games.push(game)
+    return socket.emit('success', 'created room ' + options.room)
   })
 
   socket.on('join', (room) => {
@@ -28,6 +29,11 @@ io.on('connection', (socket) => {
       return socket.emit('failure', 'room ' + room + ' does not exist')
     }
   })
+  /*
+  socket.on('online', () => {
+    return socket.emit('online', '431')
+  })
+  */
 })
 
 http.listen(port, () => {
