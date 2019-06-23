@@ -7,3 +7,9 @@ https://dev.to/rexeze/how-to-build-a-real-time-chat-app-with-nodejs-socketio-and
 https://itnext.io/building-a-node-js-websocket-chat-app-with-socket-io-and-react-473a0686d1e1
 
 https://github.com/justadudewhohacks/websocket-chat
+
+https://ipenywis.com/tutorials/node.js-socket.io-introduction-and-getting-started-01
+https://ipenywis.com/tutorials/node.js-socket.io-namespaces%2C-rooms-and-connections-02
+https://ipenywis.com/tutorials/node.js-socket.io-make-a-basic-chat-application-%28native-js%29-03
+
+https://www.codementor.io/codementorteam/socketio-player-matchmaking-system-pdxz4apty
