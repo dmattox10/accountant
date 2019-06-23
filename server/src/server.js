@@ -1,46 +1,35 @@
-'use strict';
- 
-const express = require("express");
-const http = require('http');
-const socketio = require('socket.io');
- 
-const socketEvents = require('./web/socket'); 
-const routes = require('./web/routes'); 
-const appConfig = require('./config/app-config'); 
- 
- 
-class Server{
- 
-    constructor(){
-        this.app = express();
-        this.http = http.Server(this.app);
-        this.socket = socketio(this.http);
+import express from 'express'
+const app = express()
+const port = 3000
+const http = require('http').createServer()
+const io = require('socket.io')(http)
+
+let games = []
+
+io.on('connection', (socket) => {
+
+  socket.on('create', (room) => {
+    let game = {
+      name: room,
+      players: [],
+      bank: ''
     }
- 
-    appConfig(){        
-        new appConfig(this.app).includeConfig();
+    console.log('Room ' + room + ' created')
+    return socket.emit('success', 'created room ' + room)
+  })
+
+  socket.on('join', (room) => {
+    if (games.some(e => e.name === room)) {
+  //if (games.filter(e => e.name === room).length > 0) {  
+  //if (games.filter(function(e) { return e.name === room }).length > 0) {  
+      return socket.emit('success', 'joined room ' + room)
     }
- 
-    /* Including app Routes starts*/
-    includeRoutes(){
-        new routes(this.app).routesConfig();
-        new socketEvents(this.socket).socketConfig();
+    else {
+      return socket.emit('failure', 'room ' + room + ' does not exist')
     }
-    /* Including app Routes ends*/  
- 
-    appExecute(){
-        this.appConfig();
-        this.includeRoutes();
- 
-        const port =  process.env.PORT || 4000;
-        const host = process.env.HOST || `localhost`;      
- 
-        this.http.listen(port, host, () => {
-            console.log(`Listening on http://${host}:${port}`);
-        });
-    }
- 
-}
-    
-const app = new Server();
-app.appExecute();
+  })
+})
+
+http.listen(port, () => {
+  console.log("server is running on port " + port)
+})
