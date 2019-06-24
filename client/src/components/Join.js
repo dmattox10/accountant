@@ -25,8 +25,9 @@ class Join extends Component {
 
     handleSubmit(e) {
         e.preventDefault();
+        let room = this.state.room.toUpperCase()
         let options = {
-            room: this.state.room,
+            room: room,
             name: this.state.name.replace(' ', ''),
         }
         this.props.history.push("/game", {...options});

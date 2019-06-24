@@ -9,16 +9,6 @@ class Create extends Component {
     constructor() {
         super()
     
-        // use current hostname/port as colyseus server endpoint
-        //var endpoint = location.protocol.replace("http", "ws") + "//" + location.hostname
-    
-        // development server
-        //if (location.port && location.port !== "80") { endpoint += ":2657" }
-    
-        //this.colyseus = new Colyseus('ws://localhost:2567')
-        //this.chatRoom = this.colyseus.join('chat', { channel: window.location.hash || "#default" })
-        //this.chatRoom.on('update', this.onUpdateRemote.bind(this))
-    
         this.state = {
             
             room: '',
@@ -91,7 +81,7 @@ class Create extends Component {
 
     makeid(length) {
         var result           = ''
-        var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+        var characters       = 'ABCDEFGHIJKLMNPQRSTUVWXYZ123456789'
         var charactersLength = characters.length
         for ( var i = 0; i < length; i++ ) {
            result += characters.charAt(Math.floor(Math.random() * charactersLength))

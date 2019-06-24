@@ -5,7 +5,7 @@ const http = require('http').createServer()
 const io = require('socket.io')(http)
 
 let games = []
-
+let found
 io.on('connection', (socket) => {
 
   socket.on('create', (options) => {
@@ -22,14 +22,14 @@ io.on('connection', (socket) => {
 
   socket.on('join', (payload) => {
     //if (games.some(e => e.name === payload.room)) {
-      
+    found = false
 
   //if (games.filter(function(e) { return e.name === payload.room }).length > 0) {
     
     //let objIndex = games.findIndex((game => game.name === payload.room)) // returning -1 always....
-    console.log(payload)
     games.forEach((element, index) => {
       if (element.name === payload.room) {
+        found = true
         let player = {}
         player = {
           name: payload.name,
@@ -42,13 +42,15 @@ io.on('connection', (socket) => {
           type: 'list',
           players: players
         }
-        console.log(games[index].players)
         socket.join(payload.room)
         //return socket.emit('success', 'joined room ' + room)
-        return io.to(payload.room).emit('update', response)
+        io.to(payload.room).emit('update', response)
         //return socket.emit('update', response)
       }
     })
+    if (found === false) {
+      socket.emit('failure', 'room does not exist!')
+    }
   })
 
   socket.on('list', (payload) => {
