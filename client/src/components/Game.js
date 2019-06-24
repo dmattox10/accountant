@@ -1,11 +1,13 @@
 import React, { Component } from 'react'
 import socketIOClient from "socket.io-client"
 
-// import Player from './Player'
+import Player from './Player'
 
 const socket = socketIOClient('10.0.0.158:4001')
 
 class Game extends Component {
+    
+    
 
     constructor() {
         super()
@@ -17,7 +19,8 @@ class Game extends Component {
             room: '',
             players: [],
             bank: 0,
-            //error: ''
+            error: '',
+            amount: 0
         }
         socket.on('update', (payload) => {
             console.log(payload)
@@ -29,12 +32,15 @@ class Game extends Component {
         })
         */
     }
+
+
     componentWillMount() {
         console.log(this.props.location.state.name)
         console.log(this.props.location.state.room)
         this.setState({
             name: this.props.location.state.name,
             room: this.props.location.state.room,
+            bank: this.props.location.state.bank
         })
         //socket.emit('join', room)
         let payload = {
@@ -67,24 +73,51 @@ class Game extends Component {
             players: payload.players
         })
     }
-    /*
+    
     handleFailure = (payload) => {
         this.setState({
             error: payload
         })
     }
-    */
+    
     render() {
-        const { room, name } = this.props.location.state
-        const { bank, players } = this.state
-        
+        const { room } = this.props.location.state
+        const { bank, players, error } = this.state
+
 
         
         return (
             <div>
                 <h1>{ room }</h1>
-                {players.map((player, i) =>
-                            <h3>{ player.name }</h3>)}
+                <div className="container-fluid">
+                    <span class="align-middle">
+                        <div className="bg bg-secondary">
+                            <div className="container"></div>
+                            
+                            <div className="card text-white bg-info mb-1">
+                                <div className="card-body">
+                                    <h3 className="card-title">Send</h3>
+                                    <form className="form-inline" onSubmit={ this.handleSubmit }>
+                                        <label>Amount:</label>
+                                        <input className="form-control"
+                                                placeholder="Amount"
+                                                name="amount"
+                                                id="amount"
+                                                onChange={ this.handleInputChange }
+                                                value={ this.state.amount }
+                                            /><br />
+                                    </form>
+                                </div>
+                            </div>
+                            {players.map((player, i) =>
+                            <div><Player player={ player.name } amount={ player.money }>
+                                
+                            </Player></div>)}
+
+                            <div><Player player="Bank" amount={ bank }/></div>
+                        </div>
+                    </span>
+                </div>
             </div>
         )
     }

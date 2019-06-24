@@ -146,18 +146,7 @@ class Create extends Component {
                                             onChange={ this.handleInputChange }
                                             value={ this.state.money }
                                         /><br />
-                                        {/*<div className="form-check active">
-                                            <input className="form-check-input"
-                                            type="checkbox"
-                                            checked="checked"
-                                            onChange={ this.handleClick }
-                                            value=""
-                                            name="infinite"
-                                            id="infinite"
-                                        />
-                                        <label className="form-check-label" for="infinite">
-                                            Infinite Money in the Bank?
-                                        </label></div><br />*/}<br />
+                                        <br />
                                         <button type="submit" className="btn btn-primary">Enter Game</button>
                                         <div className="error"><h3>{ error }</h3></div>
                                         
