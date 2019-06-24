@@ -24,12 +24,33 @@ class App extends Component {
       endpoint: '10.0.0.158:4001',
       online: '0'
     }
+    /*
+    socket.on('online', (players) => {
+      this.updatePlayerCount(players)
+    })
+    */
   }
-    
+  /*
+  updatePlayerCount = (players) => {
+    this.setState({
+      online: players
+    })
+  }
+
+  send = (command, payload) => {
+    socket.emit(command, payload) // change 'red' to this.state.color
+  }
+
+  componentWillMount() {
+    this.send('online')
+  }
+  */
   render() {
+    {/*const { online } = this.state */}
     return (
       <BrowserRouter>
         <div className="App">
+          {/*<div className="players"><h3>{ online } players online!</h3></div>*/}
           <Route exact path="/" component={ All } />
           <Route exact path="/create" component={ Create } />
           <Route exact path="/join" component={ Join } />
