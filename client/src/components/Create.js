@@ -24,12 +24,12 @@ class Create extends Component {
             room: '',
             name: '',
             bank: '2500',
+            money: '1000',
             infinite: true,
             error: ''
         }
 
         socket.on('success', (message) => {
-            console.log(message)
             this.joinGame()
         })
 
@@ -53,6 +53,7 @@ class Create extends Component {
             room: this.state.room,
             name: this.state.name.replace(' ', ''),
             bank: this.state.bank,
+            money: this.state.money,
             infinite: this.state.infinite,
         }
         this.props.history.push("/game", {...options});
@@ -81,6 +82,7 @@ class Create extends Component {
             room: this.state.room,
             name: this.state.name.replace(' ', ''),
             bank: this.state.bank,
+            money: this.state.money,
             infinite: this.state.infinite,
         }
         this.send('create', options)
@@ -105,6 +107,10 @@ class Create extends Component {
         })
     }
 
+    componentWillUnmount() {
+        //this.send('leave', this.state.room)
+    }
+
     render() {
         const { room, error } = this.state
         return (
@@ -113,7 +119,7 @@ class Create extends Component {
                     <div className="bg bg-secondary">
                         <div className="container">
                             <div className="card text-white bg-info mb-3">
-                                <div className="card-header card-title">Create Game</div>
+                                <div className="card-title">Create Game</div>
                                 <div className="card-body">
                                     <h5 className="card-title">Game Code: { room }</h5>
                                     <form className="form-inline" onSubmit={ this.handleSubmit }>
@@ -132,7 +138,15 @@ class Create extends Component {
                                             onChange={ this.handleInputChange }
                                             value={ this.state.bank }
                                         /><br />
-                                        <div className="form-check active">
+                                        <label>Starting Player Amount</label>
+                                        <input className="form-control"
+                                            placeholder="2500"
+                                            name="money"
+                                            id="money"
+                                            onChange={ this.handleInputChange }
+                                            value={ this.state.money }
+                                        /><br />
+                                        {/*<div className="form-check active">
                                             <input className="form-check-input"
                                             type="checkbox"
                                             checked="checked"
@@ -143,10 +157,10 @@ class Create extends Component {
                                         />
                                         <label className="form-check-label" for="infinite">
                                             Infinite Money in the Bank?
-                                        </label><br /><br />
+                                        </label></div><br />*/}<br />
                                         <button type="submit" className="btn btn-primary">Enter Game</button>
                                         <div className="error"><h3>{ error }</h3></div>
-                                        </div>
+                                        
                                     </form>
                                 </div>
                             </div>
