@@ -21,13 +21,6 @@ io.on('connection', (socket) => {
   })
 
   socket.on('join', (payload) => {
-    //if (games.some(e => e.name === payload.room)) {
-      
-
-  //if (games.filter(function(e) { return e.name === payload.room }).length > 0) {
-    
-    //let objIndex = games.findIndex((game => game.name === payload.room)) // returning -1 always....
-    console.log(payload)
     games.forEach((element, index) => {
       if (element.name === payload.room) {
         let player = {}
@@ -49,6 +42,10 @@ io.on('connection', (socket) => {
         //return socket.emit('update', response)
       }
     })
+  })
+
+  socket.on('update', (payload) => {
+    console.log(payload)
   })
 
   socket.on('list', (payload) => {

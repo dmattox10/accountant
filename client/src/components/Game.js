@@ -26,6 +26,8 @@ class Game extends Component {
             console.log(payload)
             this.handlePayload(payload)
         })
+
+        this.sendMoney = this.sendMoney.bind(this)
         /*
         socket.on('failure', (payload) => {
             this.handleFailure(payload)
@@ -79,6 +81,20 @@ class Game extends Component {
             error: payload
         })
     }
+
+    sendMoney = (player, amount) => {
+        let payload = {
+            type: 'transfer',
+            room: this.state.room,
+            from: this.state.name,
+            to: player,
+            amount: amount
+        }
+        this.send('update', payload)
+        this.setState({
+            amount: 0
+        })
+    }
     
     render() {
         const { room } = this.props.location.state
@@ -100,21 +116,24 @@ class Game extends Component {
                                     <form className="form-inline" onSubmit={ this.handleSubmit }>
                                         <label>Amount:</label>
                                         <input className="form-control"
-                                                placeholder="Amount"
-                                                name="amount"
-                                                id="amount"
-                                                onChange={ this.handleInputChange }
-                                                value={ this.state.amount }
-                                            /><br />
+                                            placeholder="Amount"
+                                            name="amount"
+                                            id="amount"
+                                            onChange={ this.handleInputChange }
+                                            value={ this.state.amount }
+                                        /><br />
+                                        <br />
+                                        {/*}
+                                        <button type="submit" className="btn btn-primary">Send Money</button>
+                                        */}
                                     </form>
                                 </div>
                             </div>
                             {players.map((player, i) =>
-                            <div><Player player={ player.name } amount={ player.money }>
-                                
+                            <div><Player player={ player.name } amount={ player.money } onClick={ this.sendMoney(player.name, this.state.amount)}> 
                             </Player></div>)}
 
-                            <div><Player player="Bank" amount={ bank }/></div>
+                            <div><Player player="Bank" amount={ bank } onClick={ this.sendMoney("bank", this.state.amount) }/></div>
                         </div>
                     </span>
                 </div>
