@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import socketIOClient from "socket.io-client"
+import socketIOClient from 'socket.io-client'
 
-import Player from './Player'
+//import Player from './Player'
 
 const socket = socketIOClient('10.0.0.158:4001')
 
@@ -28,6 +28,7 @@ class Game extends Component {
         })
 
         this.sendMoney = this.sendMoney.bind(this)
+        this.handleInputChange = this.handleInputChange.bind(this)
         /*
         socket.on('failure', (payload) => {
             this.handleFailure(payload)
@@ -37,8 +38,6 @@ class Game extends Component {
 
 
     componentWillMount() {
-        console.log(this.props.location.state.name)
-        console.log(this.props.location.state.room)
         this.setState({
             name: this.props.location.state.name,
             room: this.props.location.state.room,
@@ -50,11 +49,6 @@ class Game extends Component {
             room: this.props.location.state.room,
         }
         this.send('join', payload)
-    }
-
-    componentWillUnmount() {
-        //socket.emit('leave', name)
-        //this.send('leave', this.state.name)
     }
 
     send = (command, payload) => {
@@ -95,6 +89,12 @@ class Game extends Component {
             amount: 0
         })
     }
+
+    handleInputChange(e) {
+        this.setState({
+            [e.target.name]: e.target.value
+        })
+    }
     
     render() {
         const { room } = this.props.location.state
@@ -105,35 +105,43 @@ class Game extends Component {
         return (
             <div>
                 <h1>{ room }</h1>
-                <div className="container-fluid">
-                    <span class="align-middle">
-                        <div className="bg bg-secondary">
-                            <div className="container"></div>
+                <div className='container-fluid'>
+                    <span class='align-middle'>
+                        <div className='bg bg-secondary'>
+                            <div className='container'></div>
                             
-                            <div className="card text-white bg-info mb-1">
-                                <div className="card-body">
-                                    <h3 className="card-title">Send</h3>
-                                    <form className="form-inline" onSubmit={ this.handleSubmit }>
+                            <div className='card text-white bg-info mb-1'>
+                                <div className='card-body'>
+                                    <h3 className='card-title'>Send</h3>
+                                    <form className='form-inline' onSubmit={ this.handleSubmit }>
                                         <label>Amount:</label>
-                                        <input className="form-control"
-                                            placeholder="Amount"
-                                            name="amount"
-                                            id="amount"
+                                        <input className='form-control'
+                                            placeholder='Amount'
+                                            name='amount'
+                                            id='amount'
                                             onChange={ this.handleInputChange }
                                             value={ this.state.amount }
                                         /><br />
                                         <br />
-                                        {/*}
-                                        <button type="submit" className="btn btn-primary">Send Money</button>
-                                        */}
                                     </form>
                                 </div>
                             </div>
-                            {players.map((player, i) =>
-                            <div><Player player={ player.name } amount={ player.money } onClick={ this.sendMoney(player.name, this.state.amount)}> 
-                            </Player></div>)}
-
-                            <div><Player player="Bank" amount={ bank } onClick={ this.sendMoney("bank", this.state.amount) }/></div>
+                            { players.map(player => 
+                                <div className='card text-white bg-info mb-1'>
+                                    <div className='card-body' onClick={ () => this.sendMoney(player.name, this.state.amount) }>
+                                    <h3 className='player'/>
+                                    {player.name}
+                                    <h3 className='right'>{player.money}</h3>
+                                    </div>
+                                </div>
+                            )}
+                            <div className='card text-white bg-info mb-1'>
+                                <div className='card-body' onClick={ () => this.sendMoney('bank', this.state.amount) } >
+                                <h3 className='player'/>
+                                Bank
+                                <h3 className='right'>{ bank }</h3>
+                                </div>
+                            </div>
                         </div>
                     </span>
                 </div>

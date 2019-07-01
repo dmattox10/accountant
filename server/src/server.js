@@ -37,9 +37,9 @@ io.on('connection', (socket) => {
         }
         console.log(games[index].players)
         socket.join(payload.room)
-        //return socket.emit('success', 'joined room ' + room)
+        // return socket.emit('success', 'joined room ' + room)
         return io.to(payload.room).emit('update', response)
-        //return socket.emit('update', response)
+        // return socket.emit('update', response)
       }
     })
   })
@@ -48,22 +48,6 @@ io.on('connection', (socket) => {
     console.log(payload)
   })
 
-  socket.on('list', (payload) => {
-    if (games.some(e => e.name === payload.room)) {
-      objIndex = games.findIndex((game => game.name === payload.room))
-      let players = games[objIndex].players
-      let payload = {
-        type: list,
-        players: players
-      }
-      //return socket.emit('list', players)
-      return io.to(payload.room).emit('update', payload)
-    }
-    else {
-      // handle error gracefully here
-      // return socket.emit('failure', 'Game does not exist!')
-    }
-  })
   socket.on('leave', (room) => {
     games.forEach((element, index) => {
       if (element.name === room) {
@@ -83,5 +67,5 @@ io.on('connection', (socket) => {
 })
 
 http.listen(port, () => {
-  console.log("server is running on port " + port)
+  console.log('server is running on port ' + port)
 })
