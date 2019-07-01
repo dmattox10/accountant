@@ -1,4 +1,5 @@
 import express from 'express'
+import { format } from 'url';
 const app = express()
 const port = 4001
 const http = require('http').createServer()
@@ -35,7 +36,6 @@ io.on('connection', (socket) => {
           type: 'list',
           players: players
         }
-        console.log(games[index].players)
         socket.join(payload.room)
         // return socket.emit('success', 'joined room ' + room)
         return io.to(payload.room).emit('update', response)
@@ -44,8 +44,59 @@ io.on('connection', (socket) => {
     })
   })
 
+  // Need Error and Negative amount handling
   socket.on('update', (payload) => {
-    console.log(payload)
+    switch (payload.type) {
+      case 'transfer':
+        let room = payload.room
+        let from = payload.from
+        let to = payload.to
+        let amount = payload.amount
+        games.forEach((element, index) => {
+          if (element.name === room ) {
+            if (from === 'bank') {
+              games[index].bank -= amount
+              games[index].players.forEach((player, i) => {
+                if (player.name === to) {
+                  games[index].players[i].money += amount
+                }
+              })
+            }
+            else if (to === 'bank') {
+              games[index].bank += amount
+              games[index].players.forEach((player, i) => {
+                if (player.name === from) {
+                  games[index].players[i].money -= amount
+                }
+              })
+            }
+            else {
+              games[index].players.forEach((player, i) => {
+                if (player.name === to) {
+                  games[index].players[i].money += amount
+                }
+                if (player.name === from) {
+                  games[index].players[i].money -= amount
+                }
+              })
+            }
+            let players = games[index].players
+            let response = {
+              type: 'list',
+              players: players
+            }
+            io.to(room).emit('update', response)
+            response = {}
+            response = {
+              type: 'bank',
+              amount: games[index].bank
+            }
+            return io.to(room).emit('update', response)
+          }
+        })
+
+      break
+    }
   })
 
   socket.on('leave', (room) => {

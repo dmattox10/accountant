@@ -60,13 +60,21 @@ class Game extends Component {
         switch (payload.type) {
             case 'list': 
             this.updatePlayers(payload)
-            break;
+            break
+            case 'bank':
+            this.updateBank(payload)
+            break
         }
     }
 
     updatePlayers = (payload) => {
         this.setState({
             players: payload.players
+        })
+    }
+    updateBank = (payload) => {
+        this.setState({
+            bank: payload.bank
         })
     }
     
