@@ -9,6 +9,7 @@ class All extends Component {
                 <Link to="/create">Create</Link>
                 <Link to="/join">Join</Link>
                 <Link to="/rejoin">Rejoin</Link>
+                <Link to="/help">HowTo</Link>
             </div>
         )
     }

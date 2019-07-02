@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { withRouter } from "react-router";
 import socketIOClient from "socket.io-client"
 
-const socket = socketIOClient('10.0.0.158:4001')
+const socket = socketIOClient('localhost:4001')
 
 class Create extends Component {
 

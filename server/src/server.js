@@ -42,7 +42,7 @@ io.on('connection', (socket) => {
         response = {}
         response = {
           type: 'bank',
-          amount: parseInt(games[index].bank)
+          bank: parseInt(games[index].bank)
         }
         return io.to(payload.room).emit('update', response)
         // return socket.emit('update', response)
@@ -60,21 +60,21 @@ io.on('connection', (socket) => {
         let amount = parseInt(payload.amount)
         games.forEach((element, index) => {
           if (element.name === room ) {
-            if (from === 'bank') {
-              games[index].bank -= amount
-              games[index].players.forEach((player, i) => {
-                if (player.name === to) {
-                  games[index].players[i].money += amount
-                  console.log('bank paid ' + player.name + ' ' + amount)
-                }
-              })
-            }
-            else if (to === 'bank') {
+            if (to === 'bank') {
               games[index].bank += amount
               games[index].players.forEach((player, i) => {
                 if (player.name === from) {
                   games[index].players[i].money -= amount
                   console.log(player.name + ' paid the bank ' + amount)
+                }
+              })
+            }
+            else if (to === from) {
+              games[index].bank -= amount
+              games[index].players.forEach((player, i) => {
+                if (player.name === to) {
+                  games[index].players[i].money += amount
+                  console.log('bank paid ' + player.name + ' ' + amount)
                 }
               })
             }
@@ -99,7 +99,7 @@ io.on('connection', (socket) => {
             response = {}
             response = {
               type: 'bank',
-              amount: parseInt(games[index].bank)
+              bank: parseInt(games[index].bank)
             }
             return io.to(room).emit('update', response)
           }

@@ -3,7 +3,7 @@ import socketIOClient from 'socket.io-client'
 
 //import Player from './Player'
 
-const socket = socketIOClient('10.0.0.158:4001')
+const socket = socketIOClient('localhost:4001')
 
 class Game extends Component {
     
@@ -14,7 +14,7 @@ class Game extends Component {
 
     
         this.state = {
-            endpoint: '10.0.0.158:4001',
+            endpoint: 'localhost:4001',
             name: '',
             room: '',
             players: [],
@@ -114,7 +114,7 @@ class Game extends Component {
             <div>
                 <h1>{ room }</h1>
                 <div className='container-fluid'>
-                    <span class='align-middle'>
+                    <span className='align-middle'>
                         <div className='bg bg-secondary'>
                             <div className='container'></div>
                             
@@ -137,7 +137,7 @@ class Game extends Component {
                             </div>
                             { players.map(player => 
                                 <div className='card text-white bg-info mb-1'>
-                                    <div className='card-body' onClick={ () => this.sendMoney(player.name, this.state.amount) }>
+                                    <div className='card-body' onClick={ () => this.sendMoney(player.name, parseInt(this.state.amount)) }>
                                     <h3 className='player'/>
                                     {player.name}
                                     <h3 className='right'>{player.money}</h3>
@@ -145,10 +145,10 @@ class Game extends Component {
                                 </div>
                             )}
                             <div className='card text-white bg-info mb-1'>
-                                <div className='card-body' onClick={ () => this.sendMoney('bank', this.state.amount) } >
+                                <div className='card-body' onClick={ () => this.sendMoney('bank', parseInt(this.state.amount)) } >
                                 <h3 className='player'/>
                                 Bank
-                                <h3 className='right'>{ bank }</h3>
+                                <h3 className='right'>{ parseInt(bank) }</h3>
                                 </div>
                             </div>
                         </div>
