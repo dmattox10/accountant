@@ -23,8 +23,8 @@ class Create extends Component {
             
             room: '',
             name: '',
-            bank: '2500',
-            money: '1000',
+            bank: 2500,
+            money: 1000,
             infinite: true,
             error: ''
         }
@@ -52,8 +52,8 @@ class Create extends Component {
         let options = {
             room: this.state.room,
             name: this.state.name.replace(' ', ''),
-            bank: this.state.bank,
-            money: this.state.money,
+            bank: parseInt(this.state.bank),
+            money: parseInt(this.state.money),
             infinite: this.state.infinite,
         }
         this.props.history.push("/game", {...options});
@@ -81,8 +81,8 @@ class Create extends Component {
         let options = {
             room: this.state.room,
             name: this.state.name.replace(' ', ''),
-            bank: this.state.bank,
-            money: this.state.money,
+            bank: parseInt(this.state.bank),
+            money: parseInt(this.state.money),
             infinite: this.state.infinite,
         }
         this.send('create', options)

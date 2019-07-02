@@ -41,7 +41,7 @@ class Game extends Component {
         this.setState({
             name: this.props.location.state.name,
             room: this.props.location.state.room,
-            bank: this.props.location.state.bank
+            bank: parseInt(this.props.location.state.bank)
         })
         //socket.emit('join', room)
         let payload = {
@@ -74,7 +74,7 @@ class Game extends Component {
     }
     updateBank = (payload) => {
         this.setState({
-            bank: payload.bank
+            bank: parseInt(payload.bank)
         })
     }
     
@@ -90,7 +90,7 @@ class Game extends Component {
             room: this.state.room,
             from: this.state.name,
             to: player,
-            amount: amount
+            amount: parseInt(amount)
         }
         this.send('update', payload)
         this.setState({
@@ -127,6 +127,7 @@ class Game extends Component {
                                             placeholder='Amount'
                                             name='amount'
                                             id='amount'
+                                            type='number'
                                             onChange={ this.handleInputChange }
                                             value={ this.state.amount }
                                         /><br />

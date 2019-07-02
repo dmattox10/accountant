@@ -1,6 +1,6 @@
-import express from 'express'
-import { format } from 'url';
-const app = express()
+// import express from 'express'
+// import { format } from 'url';
+// const app = express()
 const port = 4001
 const http = require('http').createServer()
 const io = require('socket.io')(http)
@@ -14,8 +14,8 @@ io.on('connection', (socket) => {
       name: options.room,
       players: [],
       size: 0,
-      money: options.money,
-      bank: options.bank
+      money: parseInt(options.money),
+      bank: parseInt(options.bank)
     }
     games.push(game)
     return socket.emit('success', 'created room ' + options.room)
@@ -27,7 +27,7 @@ io.on('connection', (socket) => {
         let player = {}
         player = {
           name: payload.name,
-          money: games[index].money
+          money: parseInt(games[index].money)
         }
         games[index].size++
         games[index].players.push(player)
@@ -38,6 +38,12 @@ io.on('connection', (socket) => {
         }
         socket.join(payload.room)
         // return socket.emit('success', 'joined room ' + room)
+        io.to(payload.room).emit('update', response)
+        response = {}
+        response = {
+          type: 'bank',
+          amount: parseInt(games[index].bank)
+        }
         return io.to(payload.room).emit('update', response)
         // return socket.emit('update', response)
       }
@@ -51,7 +57,7 @@ io.on('connection', (socket) => {
         let room = payload.room
         let from = payload.from
         let to = payload.to
-        let amount = payload.amount
+        let amount = parseInt(payload.amount)
         games.forEach((element, index) => {
           if (element.name === room ) {
             if (from === 'bank') {
@@ -59,6 +65,7 @@ io.on('connection', (socket) => {
               games[index].players.forEach((player, i) => {
                 if (player.name === to) {
                   games[index].players[i].money += amount
+                  console.log('bank paid ' + player.name + ' ' + amount)
                 }
               })
             }
@@ -67,6 +74,7 @@ io.on('connection', (socket) => {
               games[index].players.forEach((player, i) => {
                 if (player.name === from) {
                   games[index].players[i].money -= amount
+                  console.log(player.name + ' paid the bank ' + amount)
                 }
               })
             }
@@ -74,9 +82,11 @@ io.on('connection', (socket) => {
               games[index].players.forEach((player, i) => {
                 if (player.name === to) {
                   games[index].players[i].money += amount
+                  console.log(player.name + ' paid')
                 }
                 if (player.name === from) {
                   games[index].players[i].money -= amount
+                  console.log(amount + ' to ' + player.name)
                 }
               })
             }
@@ -89,13 +99,12 @@ io.on('connection', (socket) => {
             response = {}
             response = {
               type: 'bank',
-              amount: games[index].bank
+              amount: parseInt(games[index].bank)
             }
             return io.to(room).emit('update', response)
           }
         })
-
-      break
+        break
     }
   })
 
