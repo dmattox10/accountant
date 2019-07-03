@@ -4,11 +4,12 @@
 const port = 4001
 const http = require('http').createServer()
 const io = require('socket.io')(http)
+const operations = require('operations')
 
 let games = []
 
 io.on('connection', (socket) => {
-
+  /*
   socket.on('create', (options) => {
     let game = {
       name: options.room,
@@ -19,6 +20,11 @@ io.on('connection', (socket) => {
     }
     games.push(game)
     return socket.emit('success', 'created room ' + options.room)
+  })
+  */
+  socket.on('create', (payload) => {
+    operations.create(payload)
+    return socket.emit('success', 'created room ' + payload.room)
   })
 
   socket.on('join', (payload) => {
