@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { withRouter } from "react-router";
 import socketIOClient from "socket.io-client"
 
-const socket = socketIOClient('localhost:4001')
+const socket = socketIOClient('http://localhost:4001')
 
 class Create extends Component {
 
@@ -26,6 +26,7 @@ class Create extends Component {
             bank: 2500,
             money: 1000,
             infinite: true,
+            negative: false,
             error: ''
         }
 
@@ -55,8 +56,9 @@ class Create extends Component {
             bank: parseInt(this.state.bank),
             money: parseInt(this.state.money),
             infinite: this.state.infinite,
+            negative: this.state.negative
         }
-        this.props.history.push("/game", {...options});
+        this.props.history.push("/game", {...options})
     }
 
     send = (command, payload) => {
@@ -84,6 +86,7 @@ class Create extends Component {
             bank: parseInt(this.state.bank),
             money: parseInt(this.state.money),
             infinite: this.state.infinite,
+            negative: this.state.negative
         }
         this.send('create', options)
         //this.props.history.push("/game", {...options});
@@ -146,6 +149,38 @@ class Create extends Component {
                                             onChange={ this.handleInputChange }
                                             value={ this.state.money }
                                         /><br />
+                                        <div className='form-check'>
+                                        <input
+                                            className='form-check-input'
+                                            name='infinite'
+                                            id='checkbox-infinite'
+                                            type='checkbox'
+                                            checked={ this.state.infinite }
+                                            onChange={() => this.setState({ infinite: !this.state.infinite })}
+                                        />
+
+                                        <span className='padding'>
+                                            <label className='form-check-label' htmlFor='checkbox-infinite'>
+                                                Infinite Bank?
+                                            </label>
+                                        </span>
+                                        </div>
+                                        <div className='form-check'>
+                                        <input
+                                            className='form-check-input'
+                                            name='negative'
+                                            id='negative'
+                                            type='checkbox'
+                                            checked={this.state.negative}
+                                            onChange={() => this.setState({ negative: !this.state.negative })}
+                                        />
+
+                                        <span className='padding'>
+                                            <label className='form-check-label' htmlFor='checkbox-negative'>
+                                            Negative Player Money?
+                                            </label>
+                                        </span>
+                                        </div>
                                         <br />
                                         <button type="submit" className="btn btn-primary">Enter Game</button>
                                         <div className="error"><h3>{ error }</h3></div>

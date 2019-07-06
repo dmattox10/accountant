@@ -12,10 +12,6 @@ const gameSchema = new Schema({
     type: Array,
     required: false
   },
-  size: {
-    type: Number,
-    required: true
-  },
   money: {
     type: Number,
     required: true

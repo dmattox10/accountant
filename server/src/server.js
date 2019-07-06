@@ -4,132 +4,98 @@
 const port = 4001
 const http = require('http').createServer()
 const io = require('socket.io')(http)
-const operations = require('operations')
+const mongoose = require('mongoose')
 
-let games = []
+const Game = require('./models/Game')
 
+mongoose.connect('mongodb://localhost:27017/auth', { useNewUrlParser: true }).then(
+  () => {console.log('Database is connected') },
+  err => { console.log('Can not connect to the database'+ err)}
+)
+
+// io.origins('*:*')
 io.on('connection', (socket) => {
-  /*
-  socket.on('create', (options) => {
-    let game = {
-      name: options.room,
-      players: [],
-      size: 0,
-      money: parseInt(options.money),
-      bank: parseInt(options.bank)
-    }
-    games.push(game)
-    return socket.emit('success', 'created room ' + options.room)
-  })
-  */
-  socket.on('create', (payload) => {
-    operations.create(payload)
+  socket.on('create', async (payload) => {
+    await Game.create({
+      _id: new mongoose.Types.ObjectId(),
+      name: payload.room,
+      money: payload.money,
+      bank: payload.bank,
+      players: []
+    })
     return socket.emit('success', 'created room ' + payload.room)
   })
-
-  socket.on('join', (payload) => {
-    games.forEach((element, index) => {
-      if (element.name === payload.room) {
-        let player = {}
-        player = {
+  socket.on('join', async (payload) => {
+    await Game.findOne({name: payload.room})
+    .then(game => {
+      if (game) {
+        const player = {
           name: payload.name,
-          money: parseInt(games[index].money)
+          money: game.money
         }
-        games[index].size++
-        games[index].players.push(player)
-        let players = games[index].players
-        let response = {
-          type: 'list',
-          players: players
-        }
-        socket.join(payload.room)
-        // return socket.emit('success', 'joined room ' + room)
-        io.to(payload.room).emit('update', response)
-        response = {}
-        response = {
-          type: 'bank',
-          bank: parseInt(games[index].bank)
-        }
-        return io.to(payload.room).emit('update', response)
-        // return socket.emit('update', response)
-      }
-    })
-  })
-
-  // Need Error and Negative amount handling
-  socket.on('update', (payload) => {
-    switch (payload.type) {
-      case 'transfer':
-        let room = payload.room
-        let from = payload.from
-        let to = payload.to
-        let amount = parseInt(payload.amount)
-        games.forEach((element, index) => {
-          if (element.name === room ) {
-            if (to === 'bank') {
-              games[index].bank += amount
-              games[index].players.forEach((player, i) => {
-                if (player.name === from) {
-                  games[index].players[i].money -= amount
-                  console.log(player.name + ' paid the bank ' + amount)
-                }
-              })
-            }
-            else if (to === from) {
-              games[index].bank -= amount
-              games[index].players.forEach((player, i) => {
-                if (player.name === to) {
-                  games[index].players[i].money += amount
-                  console.log('bank paid ' + player.name + ' ' + amount)
-                }
-              })
-            }
-            else {
-              games[index].players.forEach((player, i) => {
-                if (player.name === to) {
-                  games[index].players[i].money += amount
-                  console.log(player.name + ' paid')
-                }
-                if (player.name === from) {
-                  games[index].players[i].money -= amount
-                  console.log(amount + ' to ' + player.name)
-                }
-              })
-            }
-            let players = games[index].players
-            let response = {
-              type: 'list',
-              players: players
-            }
-            io.to(room).emit('update', response)
-            response = {}
-            response = {
-              type: 'bank',
-              bank: parseInt(games[index].bank)
-            }
-            return io.to(room).emit('update', response)
-          }
+        Game.findOneAndUpdate(
+          {name: payload.room}, 
+          {$push: {players: player}},
+          {new: true}
+        ).then(newGame => {
+          socket.join(payload.room)
+          return io
+            .to(payload.room)
+            .emit('update', newGame)
         })
-        break
-    }
-  })
-
-  socket.on('leave', (room) => {
-    games.forEach((element, index) => {
-      if (element.name === room) {
-        games[index].size--
-        if (games[index].size === 0) {
-          games.splice(index, 1)
-        }
       }
     })
+  })
+  socket.on('update', async (payload) => {
+    await Game.findOne({name: payload.room})
+      .then( async (game) => {
+        if (payload.to === 'bank') {
+          game.bank += payload.amount
+          game.players.forEach((player, i) => {
+            if (player.name === payload.from) {
+              game.players[i].money -= payload.amount
+            }
+          })
+        }
+        else if (payload.to === payload.from) {
+          game.bank -= payload.amount
+          game.players.forEach((player, i) => {
+            if (player.name === payload.to) {
+              game.players[i].money += payload.amount
+            }
+          })
+        }
+        else {
+          game.players.forEach((player, i) => {
+            if (player.name === payload.to) {
+              game.players[i].money += payload.amount
+            }
+            if (player.name === payload.from) {
+              game.players[i].money -= payload.amount
+            }
+          })
+        }
+        try {
+          await Game.findOneAndUpdate(
+            {name: payload.room},
+            game,
+            {new: true}
+          ).then(newGame => {
+            return io
+            .to(payload.room)
+            .emit('update', newGame)
+          })
+        }
+        catch (err) {
+          return io
+          .to(payload.room)
+          .emit('error', 'could not update server')
+        }
+      })
+  })
+  socket.on('leave', (room) => {
     socket.disconnect(true)
   })
-  /*
-  socket.on('online', () => {
-    return socket.emit('online', '431')
-  })
-  */
 })
 
 http.listen(port, () => {

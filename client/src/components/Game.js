@@ -3,7 +3,7 @@ import socketIOClient from 'socket.io-client'
 
 //import Player from './Player'
 
-const socket = socketIOClient('localhost:4001')
+const socket = socketIOClient('http://localhost:4001')
 
 class Game extends Component {
     
@@ -14,13 +14,17 @@ class Game extends Component {
 
     
         this.state = {
-            endpoint: 'localhost:4001',
             name: '',
-            room: '',
-            players: [],
-            bank: 0,
+            // room: '',
+            // players: [],
+            // bank: 0,
             error: '',
-            amount: 0
+            amount: 0,
+            game: {
+                name: '',
+                players: [],
+                bank: 0
+            }
         }
         socket.on('update', (payload) => {
             console.log(payload)
@@ -29,6 +33,7 @@ class Game extends Component {
 
         this.sendMoney = this.sendMoney.bind(this)
         this.handleInputChange = this.handleInputChange.bind(this)
+        this.leaveGame = this.leaveGame.bind(this)
         /*
         socket.on('failure', (payload) => {
             this.handleFailure(payload)
@@ -57,36 +62,35 @@ class Game extends Component {
     }
 
     handlePayload = (payload) => {
-        switch (payload.type) {
-            case 'list': 
-            this.updatePlayers(payload)
-            break
-            case 'bank':
-            this.updateBank(payload)
-            break
-        }
+        console.log(payload)
+        this.setState({
+            game: payload
+        })
     }
-
+    /*
     updatePlayers = (payload) => {
         this.setState({
             players: payload.players
         })
     }
+    */
+   /*
     updateBank = (payload) => {
         this.setState({
             bank: parseInt(payload.bank)
         })
     }
-    
+    */
+   /*
     handleFailure = (payload) => {
         this.setState({
             error: payload
         })
     }
-
+    */
     sendMoney = (player, amount) => {
         let payload = {
-            type: 'transfer',
+            // type: 'transfer',
             room: this.state.room,
             from: this.state.name,
             to: player,
@@ -98,6 +102,11 @@ class Game extends Component {
         })
     }
 
+    leaveGame = () => {
+        this.send('leave', this.state.room)
+        this.props.history.push("/")
+    }
+
     handleInputChange(e) {
         this.setState({
             [e.target.name]: e.target.value
@@ -106,7 +115,7 @@ class Game extends Component {
     
     render() {
         const { room } = this.props.location.state
-        const { bank, players, error } = this.state
+        const { game, error } = this.state
 
 
         
@@ -135,20 +144,26 @@ class Game extends Component {
                                     </form>
                                 </div>
                             </div>
-                            { players.map(player => 
+                            { game.players.map(player => 
                                 <div className='card text-white bg-info mb-1'>
                                     <div className='card-body' onClick={ () => this.sendMoney(player.name, parseInt(this.state.amount)) }>
-                                    <h3 className='player'/>
-                                    {player.name}
-                                    <h3 className='right'>{player.money}</h3>
+                                        <h3 className='player'>
+                                        {player.name}</h3>
+                                        <h3 className='right'>{player.money}</h3>
                                     </div>
                                 </div>
                             )}
                             <div className='card text-white bg-info mb-1'>
-                                <div className='card-body' onClick={ () => this.sendMoney('bank', parseInt(this.state.amount)) } >
-                                <h3 className='player'/>
-                                Bank
-                                <h3 className='right'>{ parseInt(bank) }</h3>
+                                <div className='card-body' onClick={ () => this.sendMoney('bank', parseInt(this.state.amount)) }>
+                                    <h3 className='player'>
+                                    Bank</h3>
+                                    <h3 className='right'>{ parseInt(game.bank) }</h3>
+                                </div>
+                            </div>
+                            <div className='card text-white bg-info mb-1'>
+                                <div className='card-body' onClick={ () => this.leaveGame() }>
+                                    <h3 className='player'>
+                                    Leave Game</h3>
                                 </div>
                             </div>
                         </div>
