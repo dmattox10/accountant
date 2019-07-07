@@ -20,6 +20,14 @@ const gameSchema = new Schema({
     type: Number,
     required: true
   },
+  infinite: {
+    type: Boolean,
+    required: true
+  },
+  negative: {
+    type: Boolean,
+    required: true
+  },
   date: {
     type: Date,
     default: Date.now

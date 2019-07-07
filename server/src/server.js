@@ -21,6 +21,8 @@ io.on('connection', (socket) => {
       name: payload.room,
       money: payload.money,
       bank: payload.bank,
+      infinite: payload.infinite,
+      negative: payload.negative,
       players: []
     })
     return socket.emit('success', 'created room ' + payload.room)
@@ -50,12 +52,26 @@ io.on('connection', (socket) => {
     await Game.findOne({name: payload.room})
       .then( async (game) => {
         if (payload.to === 'bank') {
-          game.bank += payload.amount
-          game.players.forEach((player, i) => {
-            if (player.name === payload.from) {
-              game.players[i].money -= payload.amount
-            }
-          })
+          if (game.infinite) {
+            game.bank += payload.amount
+            game.players.forEach((player, i) => {
+              if (player.name === payload.from) {
+                game.players[i].money -= payload.amount
+              }
+            })
+          }
+          else {
+            game.players.forEach((player, i) => {
+              if (player.name === payload.from) {
+                if (game.players[i].money -= payload.amount >= 0) {
+                  game.players[i].money -= payload.amount
+                }
+                else {
+                  game.players[i].money = 0
+                }
+              }
+            })
+          }
         }
         else if (payload.to === payload.from) {
           game.bank -= payload.amount
