@@ -7,11 +7,20 @@ class Join extends Component {
 
     this.state = {
       room: '',
-      name: ''
+      name: '',
+      message: ''
     }
 
     this.handleSubmit = this.handleSubmit.bind(this)
     this.handleInputChange = this.handleInputChange.bind(this)
+  }
+
+  componentWillMount() {
+    if (this.props.location.state) {
+      this.setState({
+        message: this.props.location.state.message
+      })
+    }
   }
 
   handleInputChange (e) {
@@ -32,11 +41,13 @@ class Join extends Component {
   }
 
   render () {
+    const { message } = this.state
     return (
       <div className='container-fluid'>
         <span className='align-middle'>
           <div className='bg bg-secondary'>
             <div className='container'>
+              <h3 className='error'>{ message }</h3>
               <div className='card text-white bg-info mb-3'>
                 <div className='card-title'>Join Game</div>
                 <div className='card-body'>

@@ -33,6 +33,9 @@ class Game extends Component {
         socket.on('error', (message) => {
             this.handleError(message)
         })
+        socket.on('failure', (message) => {
+            this.handleFailure(message)
+        })
 
         this.sendMoney = this.sendMoney.bind(this)
         this.handleInputChange = this.handleInputChange.bind(this)
@@ -76,6 +79,10 @@ class Game extends Component {
         this.setState({
             error: message
         })
+    }
+
+    handleFailure = (message) => {
+        this.props.history.push('/join', { message: message })
     }
     /*
     updatePlayers = (payload) => {

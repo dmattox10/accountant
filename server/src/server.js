@@ -27,24 +27,39 @@ io.on('connection', (socket) => {
     })
     return socket.emit('success', 'created room ' + payload.room)
   })
+  
   socket.on('join', async (payload) => {
     await Game.findOne({name: payload.room})
     .then(game => {
       if (game) {
+        let testPlayers = game.players
         const player = {
           name: payload.name,
           money: game.money
         }
-        Game.findOneAndUpdate(
-          {name: payload.room}, 
-          {$push: {players: player}},
-          {new: true}
-        ).then(newGame => {
-          socket.join(payload.room)
-          return io
-            .to(payload.room)
-            .emit('update', newGame)
-        })
+        testPlayers.push(player)
+        let nameTaken = false
+        testPlayers.map(existingPlayer => existingPlayer.name).sort().sort((a, b) => {
+            if (a === b) nameTaken = true
+          })
+        if (nameTaken) {
+          return socket.emit('failure', 'Player name taken.')
+        }
+        else {
+          Game.findOneAndUpdate(
+            {name: payload.room}, 
+            {$push: {players: player}},
+            {new: true}
+          ).then(newGame => {
+            socket.join(payload.room)
+            return io
+              .to(payload.room)
+              .emit('update', newGame)
+          })
+        }
+      }
+      else {
+        socket.emit('failure', 'Room does not exist.')
       }
     })
   })
