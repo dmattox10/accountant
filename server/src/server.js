@@ -48,64 +48,155 @@ io.on('connection', (socket) => {
       }
     })
   })
+
   socket.on('update', async (payload) => {
     await Game.findOne({name: payload.room})
       .then( async (game) => {
         if (payload.to === 'bank') {
-          if (game.infinite) {
+          if (game.negative) {
             game.bank += payload.amount
             game.players.forEach((player, i) => {
               if (player.name === payload.from) {
                 game.players[i].money -= payload.amount
+                Game.findOneAndUpdate(
+                  {name: payload.room},
+                  game,
+                  {new: true}
+                ).then(newGame => {
+                  return io
+                  .to(payload.room)
+                  .emit('update', newGame)
+                })
               }
             })
           }
           else {
             game.players.forEach((player, i) => {
               if (player.name === payload.from) {
-                if (game.players[i].money -= payload.amount >= 0) {
+                if (game.players[i].money - payload.amount >= 0) {
                   game.players[i].money -= payload.amount
+                  game.bank += payload.amount
+                  Game.findOneAndUpdate(
+                    {name: payload.room},
+                    game,
+                    {new: true}
+                  ).then(newGame => {
+                    return io
+                    .to(payload.room)
+                    .emit('update', newGame)
+                  })
                 }
                 else {
-                  game.players[i].money = 0
+                  return io
+                  .to(payload.room)
+                  .emit('error', 'Insufficient Player Funds, ' + payload.from)
+                  //game.players[i].money = 0
                 }
               }
             })
           }
         }
         else if (payload.to === payload.from) {
-          game.bank -= payload.amount
-          game.players.forEach((player, i) => {
-            if (player.name === payload.to) {
-              game.players[i].money += payload.amount
+          if (game.infinite) {
+            game.bank -= payload.amount
+            game.players.forEach((player, i) => {
+              if (player.name === payload.to) {
+                game.players[i].money += payload.amount
+                Game.findOneAndUpdate(
+                  {name: payload.room},
+                  game,
+                  {new: true}
+                ).then(newGame => {
+                  return io
+                  .to(payload.room)
+                  .emit('update', newGame)
+                })
+              }
+            })
+          }
+          else {
+            if (game.bank - payload.amount >= 0) {
+              game.bank -= payload.amount
+              game.players.forEach((player, i) => {
+                if (player.name === payload.to) {
+                  game.players[i].money += payload.amount
+                  Game.findOneAndUpdate(
+                    {name: payload.room},
+                    game,
+                    {new: true}
+                  ).then(newGame => {
+                    return io
+                    .to(payload.room)
+                    .emit('update', newGame)
+                  })
+                }
+              })
             }
-          })
+            else {
+              return io
+              .to(payload.room)
+              .emit('error', 'Insufficient Bank Funds, ' + payload.to)
+            }
+          }
         }
         else {
-          game.players.forEach((player, i) => {
-            if (player.name === payload.to) {
-              game.players[i].money += payload.amount
-            }
-            if (player.name === payload.from) {
-              game.players[i].money -= payload.amount
-            }
-          })
-        }
-        try {
-          await Game.findOneAndUpdate(
-            {name: payload.room},
-            game,
-            {new: true}
-          ).then(newGame => {
-            return io
-            .to(payload.room)
-            .emit('update', newGame)
-          })
-        }
-        catch (err) {
-          return io
-          .to(payload.room)
-          .emit('error', 'could not update server')
+          if (game.negative) {
+            game.players.forEach((player, i) => {
+              if (player.name === payload.to) {
+                game.players[i].money += payload.amount
+              }
+              if (player.name === payload.from) {
+                game.players[i].money -= payload.amount
+              }
+            })
+            Game.findOneAndUpdate(
+              {name: payload.room},
+              game,
+              {new: true}
+            ).then(newGame => {
+              return io
+              .to(payload.room)
+              .emit('update', newGame)
+            })
+          }
+          else {
+            game.players.forEach((player, i) => {
+              if (player.name === payload.from && player.money - payload.amount >= 0) {
+                game.players[i].money -= payload.amount
+                game.players.forEach((player, j) => {
+                  if (player.name === payload.to) {
+                    game.players[j].money += payload.amount
+                    Game.findOneAndUpdate(
+                      {name: payload.room},
+                      game,
+                      {new: true}
+                    ).then(newGame => {
+                      return io
+                      .to(payload.room)
+                      .emit('update', newGame)
+                    })
+                  }
+                })
+              }
+              else if (player.name === payload.from && player.money - payload.amount < 0) {
+                return io
+                  .to(payload.room)
+                  .emit('error', 'Insufficient Player Funds, ' + payload.from)
+              }
+              /*
+              else {
+                game.players.forEach((player, i) => {
+                  if (player.name === payload.to) {
+                    game.players[i].money += payload.amount
+                  }
+                  if (player.name === payload.from) {
+                    game.players[i].money -= payload.amount
+                  }
+                })
+              }
+              */
+            })
+          }
         }
       })
   })

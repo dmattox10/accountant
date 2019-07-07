@@ -30,6 +30,9 @@ class Game extends Component {
             console.log(payload)
             this.handlePayload(payload)
         })
+        socket.on('error', (message) => {
+            this.handleError(message)
+        })
 
         this.sendMoney = this.sendMoney.bind(this)
         this.handleInputChange = this.handleInputChange.bind(this)
@@ -64,7 +67,14 @@ class Game extends Component {
     handlePayload = (payload) => {
         console.log(payload)
         this.setState({
-            game: payload
+            game: payload,
+            error: ''
+        })
+    }
+
+    handleError = (message) => {
+        this.setState({
+            error: message
         })
     }
     /*
@@ -126,7 +136,7 @@ class Game extends Component {
                     <span className='align-middle'>
                         <div className='bg bg-secondary'>
                             <div className='container'></div>
-                            
+                            <h3 className='error'>{ error }</h3>
                             <div className='card text-white bg-info mb-1'>
                                 <div className='card-body'>
                                     <h3 className='card-title'>Send</h3>
