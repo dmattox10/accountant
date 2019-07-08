@@ -8,7 +8,8 @@ class Join extends Component {
     this.state = {
       room: '',
       name: '',
-      message: ''
+      message: '',
+      action: 'join'
     }
 
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -35,7 +36,8 @@ class Join extends Component {
     let room = this.state.room.toUpperCase()
     let options = {
       room: room,
-      name: this.state.name.replace(' ', '')
+      name: this.state.name.replace(' ', ''),
+      action: this.state.action
     }
     this.props.history.push('/game', { ...options })
   }

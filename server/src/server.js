@@ -27,7 +27,33 @@ io.on('connection', (socket) => {
     })
     return socket.emit('success', 'created room ' + payload.room)
   })
-  
+
+  socket.on('rejoin', async (payload) => {
+    await Game.findOne({name: payload.room})
+    .then(game => {
+      if (game) {
+        let exists = false
+        game.players.forEach((player, i) => {
+          if (payload.name === player.name) {
+            exists = true
+          }
+        })
+        if (exists) {
+          socket.join(payload.room)
+            return io
+              .to(payload.room)
+              .emit('update', game)
+        }
+        else {
+          socket.emit('failure', 'Check the name you entered.')
+        }
+      }
+      else {
+        socket.emit('failure', 'Room does not exist.')
+      }
+    })
+  })
+
   socket.on('join', async (payload) => {
     await Game.findOne({name: payload.room})
     .then(game => {

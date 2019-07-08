@@ -27,7 +27,8 @@ class Create extends Component {
             money: 1000,
             infinite: true,
             negative: false,
-            error: ''
+            error: '',
+            action: 'join'
         }
 
         socket.on('success', (message) => {
@@ -56,7 +57,8 @@ class Create extends Component {
             bank: parseInt(this.state.bank),
             money: parseInt(this.state.money),
             infinite: this.state.infinite,
-            negative: this.state.negative
+            negative: this.state.negative,
+            action: this.state.action
         }
         this.props.history.push("/game", {...options})
     }

@@ -20,6 +20,7 @@ class Game extends Component {
             // bank: 0,
             error: '',
             amount: 0,
+            action: '',
             game: {
                 name: '',
                 players: [],
@@ -52,14 +53,15 @@ class Game extends Component {
         this.setState({
             name: this.props.location.state.name,
             room: this.props.location.state.room,
-            bank: parseInt(this.props.location.state.bank)
+            bank: parseInt(this.props.location.state.bank),
+            action: this.props.location.state.action
         })
         //socket.emit('join', room)
         let payload = {
             name: this.props.location.state.name,
             room: this.props.location.state.room,
         }
-        this.send('join', payload)
+        this.send(this.props.location.state.action, payload)
     }
 
     send = (command, payload) => {
@@ -82,7 +84,7 @@ class Game extends Component {
     }
 
     handleFailure = (message) => {
-        this.props.history.push('/join', { message: message })
+        this.props.history.push(this.state.action, { message: message })
     }
     /*
     updatePlayers = (payload) => {
@@ -148,7 +150,7 @@ class Game extends Component {
                                 <div className='card-body'>
                                     <h3 className='card-title'>Send</h3>
                                     <form className='form-inline' onSubmit={ this.handleSubmit }>
-                                        <label>Amount:</label>
+                                        <label>Amount:&nbsp;</label>
                                         <input className='form-control'
                                             placeholder='Amount'
                                             name='amount'
